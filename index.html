@@ -430,7 +430,16 @@
     const $$ = (q, ctx=document) => Array.from(ctx.querySelectorAll(q));
     const STORAGE_KEY = 'albusinessforms.draft';
 
-    function showToast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+   function showToast(msg) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => {
+    t.classList.remove('show');
+    t.textContent = ''; // clear so no text lingers
+  }, 1800);
+}
+
     function objSet(o,p,v){ const a=p.split('.'); let c=o; for(let i=0;i<a.length-1;i++){ if(!(a[i] in c)) c[a[i]]={}; c=c[a[i]];} c[a[a.length-1]]=v; }
     function serializeForm(form){
       const d={}; $$('input,select,textarea',form).forEach(el=>{
