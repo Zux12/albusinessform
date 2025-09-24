@@ -1,39 +1,61 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
   <title>Asianloop — Marketing & Business Dev Form</title>
-  <link rel="icon" href="public/favicon.ico" />
-  <link rel="stylesheet" href="public/css/styles.css" />
+
+  <!-- Favicon & CSS -->
+  <link rel="icon" href="./public/favicon.ico" />
+  <!-- Cache-bust query to avoid Safari/GitHub Pages caching old CSS -->
+  <link rel="stylesheet" href="./public/css/styles.css?v=2" />
+  <style>
+    /* Inline fallback so it never appears “unstyled” while CSS caches */
+    body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#0f172a;background:#fff}
+    .al-inner{max-width:1040px;margin:0 auto;padding:0 16px}
+    .brand-logo{height:32px}
+    .card{border:1px solid #e5e7eb;border-radius:14px;padding:16px;margin:16px 0}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:860px){.grid-2{grid-template-columns:1fr}}
+    .steps{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+    .steps .step{border:1px solid #e5e7eb;border-radius:10px;padding:8px 10px;background:#f8fafc;cursor:pointer}
+    .steps .is-active{background:#eef0ff;border-color:#5b5bd6;color:#3f3fb3}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field span{font-weight:600;font-size:13px;color:#6b7280}
+    .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+    .btn{border:1px solid #e5e7eb;border-radius:10px;padding:9px 12px;background:linear-gradient(180deg,#fff,#f8fafc);font-weight:700;cursor:pointer}
+    .step-pane{display:none}.step-pane.is-active{display:block}
+  </style>
 </head>
 <body>
   <header class="al-header">
-    <div class="al-inner">
+    <div class="al-inner header-row">
       <div class="brand-left">
-        <img src="public/logo-light.png" alt="Asianloop" class="brand-logo" />
-        <span class="brand-title">Marketing &amp; Business Dev Form</span>
+        <img src="./public/logo-light.png" alt="Asianloop" class="brand-logo" />
+        <div class="brand-text">
+          <div class="brand-mini">AL</div>
+          <h1>Marketing &amp; Business Dev Form</h1>
+        </div>
       </div>
       <div class="brand-right">
-        <div class="avatar" title="Logged-in user (to be wired later)">AL</div>
+        <div class="avatar" title="Logged-in user">AL</div>
       </div>
     </div>
   </header>
 
-  <main class="al-main">
-    <!-- Sticky Progress -->
-    <nav id="steps" class="steps">
+  <main class="al-main al-inner">
+    <!-- Sticky stepper -->
+    <nav id="steps" class="steps sticky-steps">
       <button class="step is-active" data-step="1">1. Staff &amp; Visit</button>
       <button class="step" data-step="2">2. Client</button>
       <button class="step" data-step="3">3. Opportunity</button>
-      <button class="step" data-step="4">4. Tech Details</button>
+      <button class="step" data-step="4">4. Tech</button>
       <button class="step" data-step="5">5. Timeline</button>
       <button class="step" data-step="6">6. Attach &amp; Notes</button>
       <button class="step" data-step="7">7. Review</button>
     </nav>
 
-    <!-- Form -->
     <form id="al-form" class="al-form" autocomplete="on">
       <!-- 1) Staff & Visit -->
       <section class="card step-pane is-active" data-step-pane="1">
@@ -62,7 +84,7 @@
           </label>
         </div>
 
-        <div class="grid-3">
+        <div class="grid-2">
           <label class="field">
             <span>Area</span>
             <select name="staff.region.area" id="areaSelect">
@@ -71,29 +93,31 @@
               <option>International</option>
             </select>
           </label>
-          <label class="field show-when-local hidden" id="localRegionWrap">
-            <span>Local Region</span>
-            <select name="staff.region.local">
-              <option value="">Select…</option>
-              <option>Northern</option>
-              <option>Southern</option>
-              <option>East Coast</option>
-              <option>West Malaysia</option>
-              <option>Borneo (Sabah/Sarawak)</option>
-            </select>
-          </label>
-          <label class="field show-when-intl hidden" id="intlRegionWrap">
-            <span>International Region</span>
-            <select name="staff.region.international">
-              <option value="">Select…</option>
-              <option>ASEAN</option>
-              <option>Middle East</option>
-              <option>China</option>
-              <option>Russia</option>
-              <option>Europe</option>
-              <option>North America</option>
-            </select>
-          </label>
+          <div class="grid-2 tight-cols">
+            <label class="field show-when-local hidden" id="localRegionWrap">
+              <span>Local Region</span>
+              <select name="staff.region.local">
+                <option value="">Select…</option>
+                <option>Northern</option>
+                <option>Southern</option>
+                <option>East Coast</option>
+                <option>West Malaysia</option>
+                <option>Borneo (Sabah/Sarawak)</option>
+              </select>
+            </label>
+            <label class="field show-when-intl hidden" id="intlRegionWrap">
+              <span>International Region</span>
+              <select name="staff.region.international">
+                <option value="">Select…</option>
+                <option>ASEAN</option>
+                <option>Middle East</option>
+                <option>China</option>
+                <option>Russia</option>
+                <option>Europe</option>
+                <option>North America</option>
+              </select>
+            </label>
+          </div>
         </div>
 
         <div class="actions">
@@ -158,7 +182,7 @@
       <!-- 3) Opportunity -->
       <section class="card step-pane" data-step-pane="3">
         <h2>Opportunity</h2>
-        <div class="grid-3">
+        <div class="grid-2">
           <label class="field">
             <span>Priority</span>
             <select name="opportunity.priority" id="prioritySelect">
@@ -182,13 +206,13 @@
               <option>Lost</option>
             </select>
           </label>
+        </div>
+
+        <div class="grid-2">
           <label class="field">
             <span>Estimated Budget</span>
             <input type="number" step="0.01" name="opportunity.budget" placeholder="Amount (MYR/USD)" />
           </label>
-        </div>
-
-        <div class="grid-2">
           <label class="field">
             <span>Decision Maker Identified?</span>
             <select name="opportunity.decisionMaker">
@@ -197,21 +221,22 @@
               <option value="false">No</option>
             </select>
           </label>
-          <label class="field">
-            <span>Procurement Route</span>
-            <select name="opportunity.procurement">
-              <option value="">Select…</option>
-              <option>Direct</option>
-              <option>Tender</option>
-              <option>Panel</option>
-              <option>Framework</option>
-            </select>
-          </label>
         </div>
 
         <label class="field">
+          <span>Procurement Route</span>
+          <select name="opportunity.procurement">
+            <option value="">Select…</option>
+            <option>Direct</option>
+            <option>Tender</option>
+            <option>Panel</option>
+            <option>Framework</option>
+          </select>
+        </label>
+
+        <label class="field">
           <span>Products / Services Interest</span>
-          <select name="opportunity.interests" id="interests" multiple>
+          <select name="opportunity.interests" id="interests" multiple size="6">
             <option>Flow calibration</option>
             <option>Custody metering</option>
             <option>Provers</option>
@@ -225,7 +250,7 @@
 
         <label class="field">
           <span>Standards / Compliance</span>
-          <select name="opportunity.standards" id="standards" multiple>
+          <select name="opportunity.standards" id="standards" multiple size="6">
             <option>API MPMS 5.x</option>
             <option>API MPMS 21.1</option>
             <option>OIML R-117</option>
@@ -244,10 +269,10 @@
         </div>
       </section>
 
-      <!-- 4) Tech Details -->
+      <!-- 4) Tech -->
       <section class="card step-pane" data-step-pane="4">
         <h2>Tech Details (Optional)</h2>
-        <div class="grid-3">
+        <div class="grid-2">
           <label class="field">
             <span>Flow Meter Type</span>
             <select name="tech.meterType">
@@ -265,6 +290,9 @@
             <span>Flow Meter Size (in)</span>
             <input type="number" step="0.1" name="tech.meterSizeIn" placeholder="e.g., 12" />
           </label>
+        </div>
+
+        <div class="grid-2">
           <label class="field">
             <span>Medium</span>
             <select name="tech.medium">
@@ -278,12 +306,12 @@
               <option>Chemical</option>
             </select>
           </label>
+          <label class="field">
+            <span>Operating Conditions</span>
+            <input name="tech.conditions" placeholder="Pressure, temperature…" />
+          </label>
         </div>
 
-        <label class="field">
-          <span>Operating Conditions</span>
-          <input name="tech.conditions" placeholder="Pressure, temperature…" />
-        </label>
         <label class="field">
           <span>Current Measurement Issues</span>
           <textarea name="tech.issues" rows="3" placeholder="Drift, repeatability, prover availability…"></textarea>
@@ -299,10 +327,10 @@
         </div>
       </section>
 
-      <!-- 5) Timeline & Next Actions -->
+      <!-- 5) Timeline -->
       <section class="card step-pane" data-step-pane="5">
         <h2>Timeline &amp; Next Actions</h2>
-        <div class="grid-3">
+        <div class="grid-2">
           <label class="field">
             <span>Expected Timeline</span>
             <input name="timeline.expected" placeholder="e.g., 2025-Q4 or Nov 2025" />
@@ -320,18 +348,16 @@
               <option>Rescheduled</option>
             </select>
           </label>
-        </div>
-
-        <div class="grid-2">
           <label class="field">
             <span>Owner</span>
             <input name="timeline.owner" placeholder="Defaults to submitter later" />
           </label>
-          <label class="field">
-            <span>Task (optional)</span>
-            <input name="timeline.task1" placeholder="e.g., Send capability deck — 28 Sep" />
-          </label>
         </div>
+
+        <label class="field">
+          <span>Task (optional)</span>
+          <input name="timeline.task1" placeholder="e.g., Send capability deck — 28 Sep" />
+        </label>
 
         <div class="actions">
           <button type="button" class="btn ghost prev">Back</button>
@@ -339,19 +365,19 @@
         </div>
       </section>
 
-      <!-- 6) Attachments & Notes -->
+      <!-- 6) Attach + Notes -->
       <section class="card step-pane" data-step-pane="6">
         <h2>Attachments &amp; Notes</h2>
         <div class="grid-2">
           <label class="field">
             <span>Business Card Photo</span>
             <input type="file" id="fileCard" disabled />
-            <small class="hint">Uploads coming soon — click the button below to simulate.</small>
+            <small class="hint">Uploads coming soon — use the button below to simulate.</small>
           </label>
           <label class="field">
             <span>RFI / RFP / NDA</span>
             <input type="file" id="fileRfp" disabled />
-            <small class="hint">Uploads coming soon — click the button below to simulate.</small>
+            <small class="hint">Uploads coming soon — use the button below to simulate.</small>
           </label>
         </div>
 
@@ -370,7 +396,7 @@
         </div>
       </section>
 
-      <!-- 7) Review & Submit -->
+      <!-- 7) Review -->
       <section class="card step-pane" data-step-pane="7">
         <h2>Review &amp; Submit</h2>
         <div id="review" class="review"></div>
@@ -400,137 +426,79 @@
   </footer>
 
   <script>
-    // --- Helpers ---
     const $ = (q, ctx=document) => ctx.querySelector(q);
     const $$ = (q, ctx=document) => Array.from(ctx.querySelectorAll(q));
     const STORAGE_KEY = 'albusinessforms.draft';
 
-    function showToast(msg) {
-      const t = $('#toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 1800);
+    function showToast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+    function objSet(o,p,v){ const a=p.split('.'); let c=o; for(let i=0;i<a.length-1;i++){ if(!(a[i] in c)) c[a[i]]={}; c=c[a[i]];} c[a[a.length-1]]=v; }
+    function serializeForm(form){
+      const d={}; $$('input,select,textarea',form).forEach(el=>{
+        if(!el.name) return;
+        if(el.type==='checkbox'){ objSet(d,el.name||el.id,el.checked); }
+        else if(el.multiple && el.options){ objSet(d,el.name, Array.from(el.options).filter(o=>o.selected).map(o=>o.value)); }
+        else { objSet(d,el.name,el.value); }
+      }); return d;
     }
-
-    function objSet(obj, path, value) {
-      const parts = path.split('.');
-      let cur = obj;
-      for (let i=0; i<parts.length-1; i++) {
-        const k = parts[i];
-        if (!(k in cur)) cur[k] = {};
-        cur = cur[k];
-      }
-      cur[parts[parts.length-1]] = value;
-    }
-
-    function serializeForm(form) {
-      const data = {};
-      $$('input, select, textarea', form).forEach(el => {
-        if (!el.name) return;
-        if (el.type === 'checkbox') {
-          objSet(data, el.name || el.id, el.checked);
-        } else if (el.multiple && el.options) {
-          const vals = Array.from(el.options).filter(o => o.selected).map(o => o.value);
-          objSet(data, el.name, vals);
-        } else {
-          objSet(data, el.name, el.value);
-        }
-      });
-      return data;
-    }
-
-    function fillForm(form, data) {
-      if (!data) return;
-      $$('input, select, textarea', form).forEach(el => {
-        const path = el.name || el.id;
-        if (!path) return;
-        // Resolve path
-        const parts = path.split('.');
-        let cur = data;
-        for (const p of parts) {
-          if (cur && typeof cur === 'object' && p in cur) cur = cur[p];
-          else { cur = undefined; break; }
-        }
-        if (cur === undefined) return;
-        if (el.type === 'checkbox') {
-          el.checked = !!cur;
-        } else if (el.multiple && Array.isArray(cur)) {
-          Array.from(el.options).forEach(o => o.selected = cur.includes(o.value));
-        } else {
-          el.value = cur;
-        }
+    function fillForm(form,data){
+      if(!data) return;
+      $$('input,select,textarea',form).forEach(el=>{
+        const path=el.name||el.id; if(!path) return;
+        const parts=path.split('.'); let cur=data;
+        for(const p of parts){ if(cur && typeof cur==='object' && p in cur){ cur=cur[p]; } else { cur=undefined; break; } }
+        if(cur===undefined) return;
+        if(el.type==='checkbox'){ el.checked=!!cur; }
+        else if(el.multiple && Array.isArray(cur)){ Array.from(el.options).forEach(o=>o.selected=cur.includes(o.value)); }
+        else { el.value=cur; }
       });
     }
+    function saveDraft(){ const d=serializeForm($('#al-form')); localStorage.setItem(STORAGE_KEY,JSON.stringify(d)); $('#submitBtn').disabled=!$('#consentChk').checked; }
+    function loadDraft(){ const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return; try{ const d=JSON.parse(raw); fillForm($('#al-form'),d); showToast('Draft loaded'); updateAreaVisibility(); }catch{} }
+    function clearDraft(){ localStorage.removeItem(STORAGE_KEY); }
 
-    function saveDraft() {
-      const data = serializeForm($('#al-form'));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      $('#submitBtn').disabled = !$('#consentChk').checked; // keep submit gated
-      // no toast on every keystroke to avoid noise
-    }
-
-    function loadDraft() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      try {
-        const data = JSON.parse(raw);
-        fillForm($('#al-form'), data);
-        showToast('Draft loaded');
-        updateAreaVisibility();
-      } catch {}
-    }
-
-    function clearDraft() {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-
-    function priorityTag(p) {
-      const map = { '1':'p1', '2':'p2', '3':'p3', '4':'p4', '5':'p5' };
-      const label = { '1':'P1', '2':'P2', '3':'P3', '4':'P4', '5':'P5' }[p] || 'P?';
-      const cls = map[p] || 'p5';
+    function priorityTag(p){
+      const cls={1:'p1',2:'p2',3:'p3',4:'p4',5:'p5'}[p]||'p5';
+      const label={1:'P1',2:'P2',3:'P3',4:'P4',5:'P5'}[p]||'P?';
       return `<span class="priority ${cls}">${label}</span>`;
     }
-
-    function buildReview() {
-      const d = serializeForm($('#al-form'));
-      const interests = (d.opportunity?.interests || []).join(', ') || '—';
-      const standards = (d.opportunity?.standards || []).join(', ') || '—';
-      const dm = d.opportunity?.decisionMaker === 'true' ? 'Yes' :
-                 d.opportunity?.decisionMaker === 'false' ? 'No' : '—';
-
+    function buildReview(){
+      const d=serializeForm($('#al-form'));
+      const interests=(d.opportunity?.interests||[]).join(', ')||'—';
+      const standards=(d.opportunity?.standards||[]).join(', ')||'—';
+      const dm=d.opportunity?.decisionMaker==='true'?'Yes':d.opportunity?.decisionMaker==='false'?'No':'—';
       $('#review').innerHTML = `
         <div class="review-grid">
           <div>
             <h3>Staff & Visit</h3>
             <ul>
-              <li><strong>Unit ID:</strong> ${d.staff?.unitId || '—'}</li>
-              <li><strong>Staff:</strong> ${d.staff?.name || '—'}</li>
-              <li><strong>Meeting Date:</strong> ${d.staff?.meetingDate || '—'}</li>
-              <li><strong>Visit Type:</strong> ${d.staff?.visitType || '—'}</li>
-              <li><strong>Area:</strong> ${d.staff?.region?.area || '—'}</li>
-              <li><strong>Local:</strong> ${d.staff?.region?.local || '—'}</li>
-              <li><strong>International:</strong> ${d.staff?.region?.international || '—'}</li>
+              <li><strong>Unit ID:</strong> ${d.staff?.unitId||'—'}</li>
+              <li><strong>Staff:</strong> ${d.staff?.name||'—'}</li>
+              <li><strong>Date:</strong> ${d.staff?.meetingDate||'—'}</li>
+              <li><strong>Visit Type:</strong> ${d.staff?.visitType||'—'}</li>
+              <li><strong>Area:</strong> ${d.staff?.region?.area||'—'}</li>
+              <li><strong>Local:</strong> ${d.staff?.region?.local||'—'}</li>
+              <li><strong>International:</strong> ${d.staff?.region?.international||'—'}</li>
             </ul>
           </div>
           <div>
             <h3>Client</h3>
             <ul>
-              <li><strong>Company:</strong> ${d.client?.company || '—'}</li>
-              <li><strong>Rep:</strong> ${d.client?.rep || '—'}</li>
-              <li><strong>Position:</strong> ${d.client?.position || '—'}</li>
-              <li><strong>Email:</strong> ${d.client?.email || '—'}</li>
-              <li><strong>Phone:</strong> ${d.client?.phone || '—'}</li>
-              <li><strong>Industry:</strong> ${d.client?.industry || '—'}</li>
-              <li><strong>Address:</strong> ${d.client?.address || '—'}</li>
+              <li><strong>Company:</strong> ${d.client?.company||'—'}</li>
+              <li><strong>Rep:</strong> ${d.client?.rep||'—'}</li>
+              <li><strong>Position:</strong> ${d.client?.position||'—'}</li>
+              <li><strong>Email:</strong> ${d.client?.email||'—'}</li>
+              <li><strong>Phone:</strong> ${d.client?.phone||'—'}</li>
+              <li><strong>Industry:</strong> ${d.client?.industry||'—'}</li>
+              <li><strong>Address:</strong> ${d.client?.address||'—'}</li>
             </ul>
           </div>
           <div>
-            <h3>Opportunity ${priorityTag(d.opportunity?.priority || '')}</h3>
+            <h3>Opportunity ${priorityTag(d.opportunity?.priority||'')}</h3>
             <ul>
-              <li><strong>Stage:</strong> ${d.opportunity?.stage || '—'}</li>
-              <li><strong>Budget:</strong> ${d.opportunity?.budget || '—'}</li>
+              <li><strong>Stage:</strong> ${d.opportunity?.stage||'—'}</li>
+              <li><strong>Budget:</strong> ${d.opportunity?.budget||'—'}</li>
               <li><strong>Decision Maker:</strong> ${dm}</li>
-              <li><strong>Procurement:</strong> ${d.opportunity?.procurement || '—'}</li>
+              <li><strong>Procurement:</strong> ${d.opportunity?.procurement||'—'}</li>
               <li><strong>Interests:</strong> ${interests}</li>
               <li><strong>Standards:</strong> ${standards}</li>
             </ul>
@@ -538,146 +506,84 @@
           <div>
             <h3>Tech</h3>
             <ul>
-              <li><strong>Meter Type:</strong> ${d.tech?.meterType || '—'}</li>
-              <li><strong>Size (in):</strong> ${d.tech?.meterSizeIn || '—'}</li>
-              <li><strong>Medium:</strong> ${d.tech?.medium || '—'}</li>
-              <li><strong>Conditions:</strong> ${d.tech?.conditions || '—'}</li>
-              <li><strong>Issues:</strong> ${d.tech?.issues || '—'}</li>
-              <li><strong>Required Docs:</strong> ${d.tech?.requiredDocs || '—'}</li>
+              <li><strong>Meter Type:</strong> ${d.tech?.meterType||'—'}</li>
+              <li><strong>Size (in):</strong> ${d.tech?.meterSizeIn||'—'}</li>
+              <li><strong>Medium:</strong> ${d.tech?.medium||'—'}</li>
+              <li><strong>Conditions:</strong> ${d.tech?.conditions||'—'}</li>
+              <li><strong>Issues:</strong> ${d.tech?.issues||'—'}</li>
+              <li><strong>Required Docs:</strong> ${d.tech?.requiredDocs||'—'}</li>
             </ul>
           </div>
           <div>
             <h3>Timeline</h3>
             <ul>
-              <li><strong>Expected:</strong> ${d.timeline?.expected || '—'}</li>
-              <li><strong>Next Follow-Up:</strong> ${d.timeline?.nextFollowUp || '—'}</li>
-              <li><strong>Status:</strong> ${d.timeline?.followUpStatus || '—'}</li>
-              <li><strong>Owner:</strong> ${d.timeline?.owner || '—'}</li>
-              <li><strong>Task:</strong> ${d.timeline?.task1 || '—'}</li>
+              <li><strong>Expected:</strong> ${d.timeline?.expected||'—'}</li>
+              <li><strong>Next Follow-Up:</strong> ${d.timeline?.nextFollowUp||'—'}</li>
+              <li><strong>Status:</strong> ${d.timeline?.followUpStatus||'—'}</li>
+              <li><strong>Owner:</strong> ${d.timeline?.owner||'—'}</li>
+              <li><strong>Task:</strong> ${d.timeline?.task1||'—'}</li>
             </ul>
           </div>
           <div>
             <h3>Notes</h3>
-            <div class="notes-box">${(d.notes || '').replace(/</g,'&lt;') || '—'}</div>
+            <div class="notes-box">${(d.notes||'').replace(/</g,'&lt;')||'—'}</div>
           </div>
-        </div>
-      `;
+        </div>`;
     }
-
-    function updateAreaVisibility() {
-      const val = $('#areaSelect').value;
-      $('#localRegionWrap').classList.toggle('hidden', val !== 'Local');
-      $('#intlRegionWrap').classList.toggle('hidden', val !== 'International');
+    function updateAreaVisibility(){
+      const v=$('#areaSelect').value;
+      $('#localRegionWrap').classList.toggle('hidden', v!=='Local');
+      $('#intlRegionWrap').classList.toggle('hidden', v!=='International');
     }
-
-    function validateMinimal() {
-      const reqs = [
-        'staff.name',
-        'staff.meetingDate',
-        'client.company',
-        'client.rep',
-        // at least one contact
-      ];
-      const data = serializeForm($('#al-form'));
-      const hasEmail = !!(data.client?.email);
-      const hasPhone = !!(data.client?.phone);
-      for (const p of reqs) {
-        const parts = p.split('.');
-        let cur = data;
-        for (const part of parts) {
-          if (cur && typeof cur === 'object' && part in cur) cur = cur[part];
-          else return false;
-        }
-        if (!cur) return false;
+    function validateMinimal(){
+      const d=serializeForm($('#al-form'));
+      const hasEmail=!!(d.client?.email), hasPhone=!!(d.client?.phone);
+      const need=['staff.name','staff.meetingDate','client.company','client.rep'];
+      for(const p of need){
+        const parts=p.split('.'); let cur=d;
+        for(const s of parts){ if(cur && typeof cur==='object' && s in cur) cur=cur[s]; else return false; }
+        if(!cur) return false;
       }
-      if (!hasEmail && !hasPhone) return false;
+      if(!hasEmail && !hasPhone) return false;
       return true;
     }
-
-    // --- Step logic ---
-    function goStep(n) {
-      $$('.step').forEach(b => b.classList.toggle('is-active', b.dataset.step == n));
-      $$('.step-pane').forEach(p => p.classList.toggle('is-active', p.dataset.stepPane == n));
-      if (n == 7) buildReview();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    function goStep(n){
+      $$('.step').forEach(b=>b.classList.toggle('is-active', b.dataset.step==n));
+      $$('.step-pane').forEach(p=>p.classList.toggle('is-active', p.dataset.stepPane==n));
+      if(n==7) buildReview();
+      window.scrollTo({top:0,behavior:'smooth'});
     }
 
-    // Wire events
-    document.addEventListener('DOMContentLoaded', () => {
-      // Year
-      $('#year').textContent = new Date().getFullYear();
-
-      // Load draft (if available)
+    document.addEventListener('DOMContentLoaded', ()=>{
+      $('#year').textContent=new Date().getFullYear();
       loadDraft();
 
-      // Step buttons (top)
-      $$('#steps .step').forEach(btn => {
-        btn.addEventListener('click', () => goStep(btn.dataset.step));
-      });
+      $$('#steps .step').forEach(btn=>btn.addEventListener('click',()=>goStep(btn.dataset.step)));
+      $$('.next').forEach(b=>b.addEventListener('click',()=>{ saveDraft(); const cur=Number($('.step.is-active').dataset.step); goStep(Math.min(cur+1,7)); }));
+      $$('.prev').forEach(b=>b.addEventListener('click',()=>{ saveDraft(); const cur=Number($('.step.is-active').dataset.step); goStep(Math.max(cur-1,1)); }));
 
-      // Prev/Next
-      $$('.next').forEach(b => b.addEventListener('click', () => {
-        saveDraft();
-        const cur = Number($('.step.is-active').dataset.step);
-        goStep(Math.min(cur + 1, 7));
-      }));
-      $$('.prev').forEach(b => b.addEventListener('click', () => {
-        saveDraft();
-        const cur = Number($('.step.is-active').dataset.step);
-        goStep(Math.max(cur - 1, 1));
-      }));
-
-      // Autosave on change
-      $$('#al-form input, #al-form select, #al-form textarea').forEach(el => {
+      $$('#al-form input,#al-form select,#al-form textarea').forEach(el=>{
         el.addEventListener('change', saveDraft);
-        el.addEventListener('input', e => {
-          // Throttle lightweightly
-          if (el.dataset._typing) return;
-          el.dataset._typing = '1';
-          setTimeout(() => { saveDraft(); delete el.dataset._typing; }, 600);
+        el.addEventListener('input', ()=>{
+          if(el.dataset._typing) return; el.dataset._typing='1';
+          setTimeout(()=>{ saveDraft(); delete el.dataset._typing; }, 500);
         });
       });
 
-      // Area toggles
       $('#areaSelect').addEventListener('change', updateAreaVisibility);
-
-      // Consent gating submit
-      $('#consentChk').addEventListener('change', () => {
-        $('#submitBtn').disabled = !$('#consentChk').checked;
+      $('#consentChk').addEventListener('change', ()=>$('#submitBtn').disabled=!$('#consentChk').checked);
+      $('#simulateUpload').addEventListener('click', ()=>showToast('Uploads coming soon — enabled in v1.1'));
+      $('#printBtn').addEventListener('click', ()=>{ buildReview(); window.print(); });
+      $('#resetBtn').addEventListener('click', ()=>{
+        if(!confirm('Clear the form and remove saved draft?')) return;
+        $('#al-form').reset(); clearDraft(); updateAreaVisibility(); showToast('Form reset');
       });
 
-      // Simulate upload
-      $('#simulateUpload').addEventListener('click', () => {
-        showToast('Uploads coming soon — this feature will be enabled in v1.1');
-      });
-
-      // Print
-      $('#printBtn').addEventListener('click', () => {
-        buildReview();
-        window.print();
-      });
-
-      // Reset
-      $('#resetBtn').addEventListener('click', () => {
-        if (!confirm('Clear the form and remove saved draft?')) return;
-        $('#al-form').reset();
-        clearDraft();
-        updateAreaVisibility();
-        showToast('Form reset');
-      });
-
-      // Submit (UI only)
-      $('#al-form').addEventListener('submit', (e) => {
+      $('#al-form').addEventListener('submit', (e)=>{
         e.preventDefault();
-        if (!$('#consentChk').checked) {
-          showToast('Please confirm the consent checkbox');
-          return;
-        }
-        if (!validateMinimal()) {
-          showToast('Please complete required fields (Staff, Date, Company, Rep, and Email/Phone).');
-          return;
-        }
-        const data = serializeForm($('#al-form'));
+        if(!$('#consentChk').checked) return showToast('Please confirm the consent checkbox');
+        if(!validateMinimal()) return showToast('Fill required fields: Staff, Date, Company, Rep, and Email/Phone.');
+        const data=serializeForm($('#al-form'));
         console.log('[SUBMIT UI ONLY]', data);
         showToast('Saved locally. Backend wiring to MongoDB coming soon.');
       });
