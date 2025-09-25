@@ -272,45 +272,24 @@
       <!-- 4) Tech -->
       <section class="card step-pane" data-step-pane="4">
         <h2>Tech Details (Optional)</h2>
-        <div class="grid-2">
-          <label class="field">
-            <span>Flow Meter Type</span>
-            <select name="tech.meterType">
-              <option value="">Select…</option>
-              <option>Ultrasonic</option>
-              <option>Coriolis</option>
-              <option>Turbine</option>
-              <option>Positive Displacement</option>
-              <option>Orifice</option>
-              <option>Vortex</option>
-              <option>Other</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Flow Meter Size (in)</span>
-            <input type="number" step="0.1" name="tech.meterSizeIn" placeholder="e.g., 12" />
-          </label>
-        </div>
+        <!-- Meters at site (repeater) -->
+<div class="card-sub">
+  <div class="meters-head">
+    <h3>Meters at Site</h3>
+    <button type="button" class="btn small" id="addMeterBtn">+ Add Meter</button>
+  </div>
 
-        <div class="grid-2">
-          <label class="field">
-            <span>Medium</span>
-            <select name="tech.medium">
-              <option value="">Select…</option>
-              <option>Crude</option>
-              <option>Condensate</option>
-              <option>NGL</option>
-              <option>LNG</option>
-              <option>Gas</option>
-              <option>Water</option>
-              <option>Chemical</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Operating Conditions</span>
-            <input name="tech.conditions" placeholder="Pressure, temperature…" />
-          </label>
-        </div>
+  <div id="metersList" class="meters-list"></div>
+  <input type="hidden" name="tech.metersJson" id="metersJson" value="[]"/>
+  <small class="hint">Add each meter the client wants us to consider. Choose “Custom…” to type your own.</small>
+</div>
+
+<!-- Operating conditions (overall) -->
+<label class="field">
+  <span>Operating Conditions (overall)</span>
+  <input name="tech.conditions" placeholder="Pressure, temperature…" />
+</label>
+
 
         <label class="field">
           <span>Current Measurement Issues</span>
@@ -461,7 +440,12 @@
         else { el.value=cur; }
       });
     }
-    function saveDraft(){ const d=serializeForm($('#al-form')); localStorage.setItem(STORAGE_KEY,JSON.stringify(d)); $('#submitBtn').disabled=!$('#consentChk').checked; }
+function saveDraft(){
+  updateMetersJson(); // ensure hidden JSON is up to date
+  const d = serializeForm($('#al-form'));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+  $('#submitBtn').disabled = !$('#consentChk').checked;
+}
     function loadDraft(){ const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return; try{ const d=JSON.parse(raw); fillForm($('#al-form'),d); showToast('Draft loaded'); updateAreaVisibility(); }catch{} }
     function clearDraft(){ localStorage.removeItem(STORAGE_KEY); }
 
@@ -470,80 +454,181 @@
       const label={1:'P1',2:'P2',3:'P3',4:'P4',5:'P5'}[p]||'P?';
       return `<span class="priority ${cls}">${label}</span>`;
     }
-    function buildReview(){
-      const d=serializeForm($('#al-form'));
-      const interests=(d.opportunity?.interests||[]).join(', ')||'—';
-      const standards=(d.opportunity?.standards||[]).join(', ')||'—';
-      const dm=d.opportunity?.decisionMaker==='true'?'Yes':d.opportunity?.decisionMaker==='false'?'No':'—';
-      $('#review').innerHTML = `
-        <div class="review-grid">
-          <div>
-            <h3>Staff & Visit</h3>
-            <ul>
-              <li><strong>Unit ID:</strong> ${d.staff?.unitId||'—'}</li>
-              <li><strong>Staff:</strong> ${d.staff?.name||'—'}</li>
-              <li><strong>Date:</strong> ${d.staff?.meetingDate||'—'}</li>
-              <li><strong>Visit Type:</strong> ${d.staff?.visitType||'—'}</li>
-              <li><strong>Area:</strong> ${d.staff?.region?.area||'—'}</li>
-              <li><strong>Local:</strong> ${d.staff?.region?.local||'—'}</li>
-              <li><strong>International:</strong> ${d.staff?.region?.international||'—'}</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Client</h3>
-            <ul>
-              <li><strong>Company:</strong> ${d.client?.company||'—'}</li>
-              <li><strong>Rep:</strong> ${d.client?.rep||'—'}</li>
-              <li><strong>Position:</strong> ${d.client?.position||'—'}</li>
-              <li><strong>Email:</strong> ${d.client?.email||'—'}</li>
-              <li><strong>Phone:</strong> ${d.client?.phone||'—'}</li>
-              <li><strong>Industry:</strong> ${d.client?.industry||'—'}</li>
-              <li><strong>Address:</strong> ${d.client?.address||'—'}</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Opportunity ${priorityTag(d.opportunity?.priority||'')}</h3>
-            <ul>
-              <li><strong>Stage:</strong> ${d.opportunity?.stage||'—'}</li>
-              <li><strong>Budget:</strong> ${d.opportunity?.budget||'—'}</li>
-              <li><strong>Decision Maker:</strong> ${dm}</li>
-              <li><strong>Procurement:</strong> ${d.opportunity?.procurement||'—'}</li>
-              <li><strong>Interests:</strong> ${interests}</li>
-              <li><strong>Standards:</strong> ${standards}</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Tech</h3>
-            <ul>
-              <li><strong>Meter Type:</strong> ${d.tech?.meterType||'—'}</li>
-              <li><strong>Size (in):</strong> ${d.tech?.meterSizeIn||'—'}</li>
-              <li><strong>Medium:</strong> ${d.tech?.medium||'—'}</li>
-              <li><strong>Conditions:</strong> ${d.tech?.conditions||'—'}</li>
-              <li><strong>Issues:</strong> ${d.tech?.issues||'—'}</li>
-              <li><strong>Required Docs:</strong> ${d.tech?.requiredDocs||'—'}</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Timeline</h3>
-            <ul>
-              <li><strong>Expected:</strong> ${d.timeline?.expected||'—'}</li>
-              <li><strong>Next Follow-Up:</strong> ${d.timeline?.nextFollowUp||'—'}</li>
-              <li><strong>Status:</strong> ${d.timeline?.followUpStatus||'—'}</li>
-              <li><strong>Owner:</strong> ${d.timeline?.owner||'—'}</li>
-              <li><strong>Task:</strong> ${d.timeline?.task1||'—'}</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Notes</h3>
-            <div class="notes-box">${(d.notes||'').replace(/</g,'&lt;')||'—'}</div>
-          </div>
-        </div>`;
-    }
+   function buildReview(){
+  const d = serializeForm($('#al-form'));
+  const interests = (d.opportunity?.interests || []).join(', ') || '—';
+  const standards = (d.opportunity?.standards || []).join(', ') || '—';
+  const dm = d.opportunity?.decisionMaker === 'true' ? 'Yes' :
+             d.opportunity?.decisionMaker === 'false' ? 'No' : '—';
+
+  let metersArr = [];
+  try { metersArr = JSON.parse(d.tech?.metersJson || '[]'); } catch {}
+  const metersHtml = (metersArr.length
+    ? `<ol class="meters-review">` + metersArr.map(m =>
+        `<li>${(m.type || '—')} — ${m.sizeIn ?? '—'} in — ${m.medium || '—'}</li>`
+      ).join('') + `</ol>`
+    : '—');
+
+  $('#review').innerHTML = `
+    <div class="review-grid">
+      <div>
+        <h3>Staff & Visit</h3>
+        <ul>
+          <li><strong>Unit ID:</strong> ${d.staff?.unitId || '—'}</li>
+          <li><strong>Staff:</strong> ${d.staff?.name || '—'}</li>
+          <li><strong>Date:</strong> ${d.staff?.meetingDate || '—'}</li>
+          <li><strong>Visit Type:</strong> ${d.staff?.visitType || '—'}</li>
+          <li><strong>Area:</strong> ${d.staff?.region?.area || '—'}</li>
+          <li><strong>Local:</strong> ${d.staff?.region?.local || '—'}</li>
+          <li><strong>International:</strong> ${d.staff?.region?.international || '—'}</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Client</h3>
+        <ul>
+          <li><strong>Company:</strong> ${d.client?.company || '—'}</li>
+          <li><strong>Rep:</strong> ${d.client?.rep || '—'}</li>
+          <li><strong>Position:</strong> ${d.client?.position || '—'}</li>
+          <li><strong>Email:</strong> ${d.client?.email || '—'}</li>
+          <li><strong>Phone:</strong> ${d.client?.phone || '—'}</li>
+          <li><strong>Industry:</strong> ${d.client?.industry || '—'}</li>
+          <li><strong>Address:</strong> ${d.client?.address || '—'}</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Opportunity ${priorityTag(d.opportunity?.priority || '')}</h3>
+        <ul>
+          <li><strong>Stage:</strong> ${d.opportunity?.stage || '—'}</li>
+          <li><strong>Budget:</strong> ${d.opportunity?.budget || '—'}</li>
+          <li><strong>Decision Maker:</strong> ${dm}</li>
+          <li><strong>Procurement:</strong> ${d.opportunity?.procurement || '—'}</li>
+          <li><strong>Interests:</strong> ${interests}</li>
+          <li><strong>Standards:</strong> ${standards}</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Tech</h3>
+        <ul>
+          <li><strong>Meters:</strong> ${metersHtml}</li>
+          <li><strong>Conditions:</strong> ${d.tech?.conditions || '—'}</li>
+          <li><strong>Issues:</strong> ${d.tech?.issues || '—'}</li>
+          <li><strong>Required Docs:</strong> ${d.tech?.requiredDocs || '—'}</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Timeline</h3>
+        <ul>
+          <li><strong>Expected:</strong> ${d.timeline?.expected || '—'}</li>
+          <li><strong>Next Follow-Up:</strong> ${d.timeline?.nextFollowUp || '—'}</li>
+          <li><strong>Status:</strong> ${d.timeline?.followUpStatus || '—'}</li>
+          <li><strong>Owner:</strong> ${d.timeline?.owner || '—'}</li>
+          <li><strong>Task:</strong> ${d.timeline?.task1 || '—'}</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Notes</h3>
+        <div class="notes-box">${(d.notes || '').replace(/</g,'&lt;') || '—'}</div>
+      </div>
+    </div>`;
+}
+
     function updateAreaVisibility(){
       const v=$('#areaSelect').value;
       $('#localRegionWrap').classList.toggle('hidden', v!=='Local');
       $('#intlRegionWrap').classList.toggle('hidden', v!=='International');
     }
+
+    /* --- Meters repeater --- */
+function addMeterRow(values = {}) {
+  const row = document.createElement('div');
+  row.className = 'meter-row';
+  row.innerHTML = `
+    <div class="meter-col">
+      <label class="field">
+        <span>Type</span>
+        <select class="meter-type">
+          <option value="">Select…</option>
+          <option>Ultrasonic</option>
+          <option>Coriolis</option>
+          <option>Turbine</option>
+          <option>Positive Displacement</option>
+          <option>Orifice</option>
+          <option>Vortex</option>
+          <option value="__custom__">Custom…</option>
+        </select>
+      </label>
+      <input class="meter-type-custom hidden" placeholder="Custom type" />
+    </div>
+    <label class="field">
+      <span>Size (in)</span>
+      <input type="number" step="0.1" class="meter-size" placeholder="e.g., 12" />
+    </label>
+    <label class="field">
+      <span>Medium</span>
+      <select class="meter-medium">
+        <option value="">Select…</option>
+        <option>Crude</option>
+        <option>Condensate</option>
+        <option>NGL</option>
+        <option>LNG</option>
+        <option>Gas</option>
+        <option>Water</option>
+        <option>Chemical</option>
+      </select>
+    </label>
+    <button type="button" class="btn icon danger remove-meter" title="Remove meter">✕</button>
+  `;
+  $('#metersList').appendChild(row);
+
+  // Prefill if values provided
+  const sel = row.querySelector('.meter-type');
+  const custom = row.querySelector('.meter-type-custom');
+  const size = row.querySelector('.meter-size');
+  const medium = row.querySelector('.meter-medium');
+
+  if (values.type) {
+    const opts = Array.from(sel.options).map(o => o.value || o.textContent);
+    if (opts.includes(values.type)) {
+      sel.value = values.type;
+    } else {
+      sel.value = '__custom__';
+      custom.classList.remove('hidden');
+      custom.value = values.type;
+    }
+  }
+  if (values.sizeIn != null) size.value = values.sizeIn;
+  if (values.medium) medium.value = values.medium;
+}
+
+function updateMetersJson(){
+  const arr = [];
+  $$('#metersList .meter-row').forEach(row => {
+    const sel = row.querySelector('.meter-type');
+    const custom = row.querySelector('.meter-type-custom');
+    const size = row.querySelector('.meter-size');
+    const medium = row.querySelector('.meter-medium');
+    const type = sel.value === '__custom__' ? (custom.value || '').trim() : sel.value;
+    const sizeIn = size.value ? Number(size.value) : null;
+    const med = medium.value;
+    if ((type && type !== '') || sizeIn !== null || med) {
+      arr.push({ type, sizeIn, medium: med });
+    }
+  });
+  $('#metersJson').value = JSON.stringify(arr);
+}
+
+function buildMetersUIFromHidden(){
+  const raw = $('#metersJson').value || '[]';
+  let data = [];
+  try { data = JSON.parse(raw); } catch {}
+  $('#metersList').innerHTML = '';
+  if (Array.isArray(data) && data.length) {
+    data.forEach(m => addMeterRow(m));
+  } else {
+    addMeterRow(); // start with one blank row
+  }
+}
+
     function validateMinimal(){
       const d=serializeForm($('#al-form'));
       const hasEmail=!!(d.client?.email), hasPhone=!!(d.client?.phone);
@@ -566,6 +651,8 @@
     document.addEventListener('DOMContentLoaded', ()=>{
       $('#year').textContent=new Date().getFullYear();
       loadDraft();
+      buildMetersUIFromHidden();
+
 
       $$('#steps .step').forEach(btn=>btn.addEventListener('click',()=>goStep(btn.dataset.step)));
       $$('.next').forEach(b=>b.addEventListener('click',()=>{ saveDraft(); const cur=Number($('.step.is-active').dataset.step); goStep(Math.min(cur+1,7)); }));
@@ -579,15 +666,62 @@
         });
       });
 
+// Meters repeater events
+$('#addMeterBtn').addEventListener('click', () => {
+  addMeterRow();
+  updateMetersJson();
+  saveDraft();
+});
+
+$('#metersList').addEventListener('change', (e) => {
+  const row = e.target.closest('.meter-row');
+  if (!row) return;
+  if (e.target.matches('.meter-type')) {
+    const isCustom = e.target.value === '__custom__';
+    const custom = row.querySelector('.meter-type-custom');
+    custom.classList.toggle('hidden', !isCustom);
+    if (isCustom) custom.focus();
+  }
+  updateMetersJson();
+  saveDraft();
+});
+
+$('#metersList').addEventListener('input', (e) => {
+  if (e.target.closest('.meter-row')) {
+    updateMetersJson();
+  }
+});
+
+$('#metersList').addEventListener('click', (e) => {
+  const btn = e.target.closest('.remove-meter');
+  if (!btn) return;
+  btn.closest('.meter-row').remove();
+  updateMetersJson();
+  saveDraft();
+});
+
+
+      
       $('#areaSelect').addEventListener('change', updateAreaVisibility);
       $('#consentChk').addEventListener('change', ()=>$('#submitBtn').disabled=!$('#consentChk').checked);
       $('#simulateUpload').addEventListener('click', ()=>showToast('Uploads coming soon — enabled in v1.1'));
       $('#printBtn').addEventListener('click', ()=>{ buildReview(); window.print(); });
-      $('#resetBtn').addEventListener('click', ()=>{
-        if(!confirm('Clear the form and remove saved draft?')) return;
-        $('#al-form').reset(); clearDraft(); updateAreaVisibility(); showToast('Form reset');
-      });
+    $('#resetBtn').addEventListener('click', () => {
+  if (!confirm('Clear the form and remove saved draft?')) return;
+  $('#al-form').reset();
+  clearDraft();
+  updateAreaVisibility();
+  // reset meters
+  $('#metersList').innerHTML = '';
+  $('#metersJson').value = '[]';
+  addMeterRow();
+  showToast('Form reset');
+});
 
+
+
+
+      
       $('#al-form').addEventListener('submit', (e)=>{
         e.preventDefault();
         if(!$('#consentChk').checked) return showToast('Please confirm the consent checkbox');
