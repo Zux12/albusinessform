@@ -463,11 +463,13 @@ function saveDraft(){
 
   let metersArr = [];
   try { metersArr = JSON.parse(d.tech?.metersJson || '[]'); } catch {}
-  const metersHtml = (metersArr.length
-    ? `<ol class="meters-review">` + metersArr.map(m =>
-        `<li>${(m.type || '—')} — ${m.sizeIn ?? '—'} in — ${m.medium || '—'}</li>`
-      ).join('') + `</ol>`
-    : '—');
+const metersHtml = (metersArr.length
+  ? `<ol class="meters-review">` + metersArr.map(m => {
+      const tag = m.tag ? `<strong>${String(m.tag).replace(/</g,'&lt;')}</strong> — ` : '';
+      return `<li>${tag}${(m.type || '—')} — ${m.sizeIn ?? '—'} in — ${m.medium || '—'}</li>`;
+    }).join('') + `</ol>`
+  : '—');
+
 
   $('#review').innerHTML = `
     <div class="review-grid">
@@ -559,10 +561,12 @@ function addMeterRow(values = {}) {
       </label>
       <input class="meter-type-custom hidden" placeholder="Custom type" />
     </div>
+
     <label class="field">
       <span>Size (in)</span>
       <input type="number" step="0.1" class="meter-size" placeholder="e.g., 12" />
     </label>
+
     <label class="field">
       <span>Medium</span>
       <select class="meter-medium">
@@ -576,6 +580,12 @@ function addMeterRow(values = {}) {
         <option>Chemical</option>
       </select>
     </label>
+
+    <label class="field">
+      <span>Tag Number</span>
+      <input class="meter-tag" placeholder="e.g., FE-1234" />
+    </label>
+
     <button type="button" class="btn icon danger remove-meter" title="Remove meter">✕</button>
   `;
   $('#metersList').appendChild(row);
@@ -585,6 +595,7 @@ function addMeterRow(values = {}) {
   const custom = row.querySelector('.meter-type-custom');
   const size = row.querySelector('.meter-size');
   const medium = row.querySelector('.meter-medium');
+  const tag = row.querySelector('.meter-tag');
 
   if (values.type) {
     const opts = Array.from(sel.options).map(o => o.value || o.textContent);
@@ -598,7 +609,10 @@ function addMeterRow(values = {}) {
   }
   if (values.sizeIn != null) size.value = values.sizeIn;
   if (values.medium) medium.value = values.medium;
+  if (values.tag) tag.value = values.tag;
 }
+
+
 
 function updateMetersJson(){
   const arr = [];
@@ -607,15 +621,18 @@ function updateMetersJson(){
     const custom = row.querySelector('.meter-type-custom');
     const size = row.querySelector('.meter-size');
     const medium = row.querySelector('.meter-medium');
+    const tag = row.querySelector('.meter-tag');
     const type = sel.value === '__custom__' ? (custom.value || '').trim() : sel.value;
     const sizeIn = size.value ? Number(size.value) : null;
     const med = medium.value;
-    if ((type && type !== '') || sizeIn !== null || med) {
-      arr.push({ type, sizeIn, medium: med });
+    const tg = (tag.value || '').trim();
+    if ((type && type !== '') || sizeIn !== null || med || tg) {
+      arr.push({ type, sizeIn, medium: med, tag: tg });
     }
   });
   $('#metersJson').value = JSON.stringify(arr);
 }
+
 
 function buildMetersUIFromHidden(){
   const raw = $('#metersJson').value || '[]';
