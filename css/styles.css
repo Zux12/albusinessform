@@ -105,7 +105,9 @@ body{
 .btn.small{ padding:7px 10px; border-radius:9px; font-weight:700; }
 .btn.icon{ width:36px; height:36px; display:grid; place-items:center; }
 .meters-list{ display:flex; flex-direction:column; gap:10px; }
-.meter-row{ display:grid; grid-template-columns: 1.1fr 0.8fr 1fr auto; gap:10px; align-items:end; }
+
+.meter-row{ display:grid; grid-template-columns: 1.1fr 0.8fr 1fr 1fr auto; gap:10px; align-items:end; }
+
 .meter-col .meter-type-custom{ margin-top:6px; }
 .meters-review{ margin:4px 0 0 16px; }
 @media (max-width: 860px){
