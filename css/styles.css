@@ -116,6 +116,38 @@ body{
 }
 
 
+/* Media (photos/docs) */
+.media-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:8px 0 10px; }
+@media (max-width:860px){ .media-wrap{ grid-template-columns:1fr; } }
+.media-title{ margin:6px 0 8px; font-size:14px; color:var(--muted); }
+
+.photos-grid{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;
+}
+@media (max-width:860px){ .photos-grid{ grid-template-columns:1fr 1fr; } }
+.photo-card{
+  border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; box-shadow: var(--shadow);
+  display:flex; flex-direction:column;
+}
+.photo-thumb{ width:100%; aspect-ratio: 4/3; object-fit:cover; background:#f1f5f9; }
+.photo-body{ padding:8px; display:flex; gap:8px; align-items:center; }
+.photo-body input{ flex:1; }
+.btn.xs{ padding:6px 8px; border-radius:8px; font-weight:800; }
+
+.docs-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; }
+.doc-item{ display:flex; align-items:center; gap:10px; border:1px solid var(--line); border-radius:10px; padding:8px 10px; background:#fff; }
+.doc-name{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Print */
+.print-only{ display:none; }
+@media print{
+  header, .steps, .al-form .actions, .al-header, .al-footer { display:none !important; }
+  .print-only{ display:block; }
+  .page-break{ page-break-before: always; }
+}
+
+
+
 /* Step panes */
 .step-pane{ display:none; }
 .step-pane.is-active{ display:block; }
