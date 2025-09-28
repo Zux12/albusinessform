@@ -87,40 +87,55 @@
         </div>
 
         <div class="grid-2">
-          <label class="field">
-            <span>Area</span>
-            <select name="staff.region.area" id="areaSelect">
-              <option value="">Select…</option>
-              <option>Local</option>
-              <option>International</option>
-            </select>
-          </label>
-          <div class="grid-2 tight-cols">
-            <label class="field show-when-local hidden" id="localRegionWrap">
-              <span>Local Region</span>
-              <select name="staff.region.local">
-                <option value="">Select…</option>
-                <option>Northern</option>
-                <option>Southern</option>
-                <option>East Coast</option>
-                <option>West Malaysia</option>
-                <option>Borneo (Sabah/Sarawak)</option>
-              </select>
-            </label>
-            <label class="field show-when-intl hidden" id="intlRegionWrap">
-              <span>International Region</span>
-              <select name="staff.region.international">
-                <option value="">Select…</option>
-                <option>ASEAN</option>
-                <option>Middle East</option>
-                <option>China</option>
-                <option>Russia</option>
-                <option>Europe</option>
-                <option>North America</option>
-              </select>
-            </label>
-          </div>
-        </div>
+  <label class="field">
+    <span>Area</span>
+    <select name="staff.region.area" id="areaSelect">
+      <option value="">Select…</option>
+      <option>Local</option>
+      <option>International</option>
+    </select>
+  </label>
+
+  <div class="grid-2 tight-cols">
+    <!-- Local -->
+    <label class="field" id="localRegionWrap">
+      <span>Local Region</span>
+      <select name="staff.region.local" id="localRegion">
+        <option value="">Select…</option>
+        <option>Northern</option>
+        <option>Southern</option>
+        <option>East Coast</option>
+        <option>West Malaysia</option>
+        <option>Borneo (Sabah/Sarawak)</option>
+      </select>
+    </label>
+
+    <!-- International -->
+    <label class="field" id="intlRegionWrap">
+      <span>International Region</span>
+      <select name="staff.region.international" id="intlRegion">
+        <option value="">Select…</option>
+        <option>ASEAN</option>
+        <option>Middle East</option>
+        <option>China</option>
+        <option>Russia</option>
+        <option>Europe</option>
+        <option>North America</option>
+      </select>
+    </label>
+
+    <!-- Country/City for International -->
+    <label class="field" id="intlCountryWrap">
+      <span>Country</span>
+      <input name="staff.region.country" id="intlCountry" placeholder="e.g., Indonesia" />
+    </label>
+    <label class="field" id="intlCityWrap">
+      <span>City</span>
+      <input name="staff.region.city" id="intlCity" placeholder="e.g., Jakarta" />
+    </label>
+  </div>
+</div>
+
 
         <div class="actions">
           <button type="button" class="btn next">Next</button>
@@ -217,7 +232,7 @@
           </label>
           <label class="field">
             <span>Decision Maker Identified?</span>
-            <select name="opportunity.decisionMaker">
+              <select name="opportunity.decisionMaker" id="decisionMakerSelect">
               <option value="">Select…</option>
               <option value="true">Yes</option>
               <option value="false">No</option>
@@ -225,6 +240,11 @@
           </label>
         </div>
 
+<label class="field hidden" id="dmNameWrap">
+  <span>Decision Maker (Name/Role)</span>
+  <input name="opportunity.decisionMakerName" id="dmNameInput" placeholder="e.g., GM Operations — Ali Bin Ahmad" disabled />
+</label>
+        
         <label class="field">
           <span>Procurement Route</span>
           <select name="opportunity.procurement">
@@ -252,6 +272,11 @@
           </select>
           <small class="hint">Use Ctrl/⌘ + click to multi-select.</small>
         </label>
+
+        <label class="field hidden" id="interestsOtherWrap">
+  <span>Please specify other products/services</span>
+  <input name="opportunity.interestsOther" id="interestsOtherInput" placeholder="Describe other interest…" disabled />
+</label>
 
         <label class="field">
           <span>Standards / Compliance</span>
@@ -352,32 +377,44 @@
       <!-- 6) Attach + Notes -->
       <section class="card step-pane" data-step-pane="6">
         <h2>Attachments &amp; Notes</h2>
-        <div class="grid-2">
-          <label class="field">
-            <span>Photos</span>
-            <input type="file" id="fileCard" disabled />
-            <small class="hint">Uploads coming soon — use the button below to simulate.</small>
-          </label>
-          <label class="field">
-            <span>Documents (PDF)</span>
-            <input type="file" id="fileRfp" disabled />
-            <small class="hint">Uploads coming soon — use the button below to simulate.</small>
-          </label>
-        </div>
 
-        <div class="actions-row">
-          <button type="button" class="btn subtle" id="simulateUpload">Simulate Upload</button>
-        </div>
+<div class="grid-2">
+  <label class="field">
+    <span>Photos</span>
+    <input type="file" id="filePhotos" accept="image/*" multiple />
+    <small class="hint">Images only (stored locally until backend is wired).</small>
+  </label>
+  <label class="field">
+    <span>Document (PDF)</span>
+    <input type="file" id="fileDocs" accept="application/pdf" multiple />
+    <small class="hint">PDF only (stored locally until backend is wired).</small>
+  </label>
+</div>
 
-        <label class="field">
-          <span>Internal Notes</span>
-          <textarea name="notes" rows="4" placeholder="Context for manager (internal only)…"></textarea>
-        </label>
+<div class="media-wrap">
+  <div>
+    <h4 class="media-title">Photo Gallery</h4>
+    <div id="photosList" class="photos-grid"></div>
+  </div>
+  <div>
+    <h4 class="media-title">Documents</h4>
+    <ul id="docsList" class="docs-list"></ul>
+  </div>
+</div>
 
-        <div class="actions">
-          <button type="button" class="btn ghost prev">Back</button>
-          <button type="button" class="btn next">Next</button>
-        </div>
+<input type="hidden" id="photosJson" name="attachments.photosJson" value="[]"/>
+<input type="hidden" id="docsJson" name="attachments.docsJson" value="[]"/>
+
+<label class="field">
+  <span>Internal Notes</span>
+  <textarea name="notes" rows="4" placeholder="Context for manager (internal only)…"></textarea>
+</label>
+
+<div class="actions">
+  <button type="button" class="btn ghost prev">Back</button>
+  <button type="button" class="btn next">Next</button>
+</div>
+
       </section>
 
       <!-- 7) Review -->
@@ -446,12 +483,16 @@
       });
     }
 function saveDraft(){
-  updateMetersJson(); // ensure hidden JSON is up to date
+  updateMetersJson();      // meters
+  updatePhotosJson();      // photos
+  updateDocsJson();        // docs
   const d = serializeForm($('#al-form'));
   localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
   $('#submitBtn').disabled = !$('#consentChk').checked;
 }
-    function loadDraft(){ const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return; try{ const d=JSON.parse(raw); fillForm($('#al-form'),d); showToast('Draft loaded'); updateAreaVisibility(); }catch{} }
+
+    function loadDraft(){ const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return; try{ const d=JSON.parse(raw); fillForm($('#al-form'),d); showToast('Draft loaded'); updateAreaVisibility(); hydrateMediaFromHidden();
+ }catch{} }
     function clearDraft(){ localStorage.removeItem(STORAGE_KEY); }
 
     function priorityTag(p){
@@ -513,37 +554,61 @@ const metersHtml = (metersArr.length
           <li><strong>Standards:</strong> ${standards}</li>
         </ul>
       </div>
-      <div>
-        <h3>Tech</h3>
-        <ul>
-          <li><strong>Meters:</strong> ${metersHtml}</li>
-          <li><strong>Conditions:</strong> ${d.tech?.conditions || '—'}</li>
-          <li><strong>Issues:</strong> ${d.tech?.issues || '—'}</li>
-          <li><strong>Required Docs:</strong> ${d.tech?.requiredDocs || '—'}</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Timeline</h3>
-        <ul>
-          <li><strong>Expected:</strong> ${d.timeline?.expected || '—'}</li>
-          <li><strong>Next Follow-Up:</strong> ${d.timeline?.nextFollowUp || '—'}</li>
-          <li><strong>Status:</strong> ${d.timeline?.followUpStatus || '—'}</li>
-          <li><strong>PIC:</strong> ${d.timeline?.owner || '—'}</li>
-          <li><strong>Task:</strong> ${d.timeline?.task1 || '—'}</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Notes</h3>
-        <div class="notes-box">${(d.notes || '').replace(/</g,'&lt;') || '—'}</div>
-      </div>
+     <div>
+  <h3>Tech</h3>
+  <ul>
+    <li><strong>Meters:</strong> ${metersHtml}</li>
+    <li><strong>Conditions:</strong> ${d.tech?.conditions || '—'}</li>
+    <li><strong>Issues:</strong> ${d.tech?.issues || '—'}</li>
+    <li><strong>Required Docs:</strong> ${d.tech?.requiredDocs || '—'}</li>
+  </ul>
+
+  <h3 style="margin-top:10px">Photos</h3>
+  ${(_photos && _photos.length)
+      ? `<div class="photos-grid">` + _photos.map(p =>
+          `<div class="photo-card"><img class="photo-thumb" src="${p.dataUrl}"><div class="photo-body"><div class="hint">${(p.desc||p.name).replace(/</g,'&lt;')}</div></div></div>`
+        ).join('') + `</div>`
+      : '<div class="hint">—</div>'}
+
+  <h3 style="margin-top:10px">Documents (PDF)</h3>
+  ${(_docs && _docs.length)
+      ? `<ul class="docs-list">` + _docs.map(d => `<li class="doc-item"><span class="doc-name">📄 ${d.name}</span></li>`).join('') + `</ul>
+         <small class="hint">PDFs will print as an appendix after the summary.</small>`
+      : '<div class="hint">—</div>'}
+</div>
+
+<div>
+  <h3>Notes</h3>
+  <div class="notes-box">${(d.notes || '').replace(/</g,'&lt;') || '—'}</div>
+</div>
+
     </div>`;
 }
 
-    function updateAreaVisibility(){
-      const v=$('#areaSelect').value;
-      $('#localRegionWrap').classList.toggle('hidden', v!=='Local');
-      $('#intlRegionWrap').classList.toggle('hidden', v!=='International');
-    }
+function updateAreaVisibility(){
+  const val = $('#areaSelect').value;
+  const localSel   = $('#localRegion');
+  const intlSel    = $('#intlRegion');
+  const countryInp = $('#intlCountry');
+  const cityInp    = $('#intlCity');
+
+  if (val === 'Local') {
+    localSel.disabled = false;
+    intlSel.disabled = true;    intlSel.value = '';
+    countryInp.disabled = true; countryInp.value = '';
+    cityInp.disabled = true;    cityInp.value = '';
+  } else if (val === 'International') {
+    localSel.disabled = true;   localSel.value = '';
+    intlSel.disabled = false;
+    countryInp.disabled = false;
+    cityInp.disabled = false;
+  } else {
+    // nothing chosen yet
+    localSel.disabled = true;   intlSel.disabled = true;
+    countryInp.disabled = true; cityInp.disabled = true;
+  }
+}
+
 
     /* --- Meters repeater --- */
 function addMeterRow(values = {}) {
@@ -651,6 +716,122 @@ function buildMetersUIFromHidden(){
   }
 }
 
+/* --- Photos & Documents (localStorage) --- */
+let _photos = []; // {id,name,dataUrl,desc}
+let _docs   = []; // {id,name,dataUrl}
+
+const PHOTOS_LIMIT = 12;
+const IMG_MAX_MB   = 1.2; // guard to keep localStorage happy
+const PDF_MAX_MB   = 3.5;
+
+function uid(){ return 'id' + Math.random().toString(36).slice(2,9) + Date.now().toString(36); }
+
+function updatePhotosJson(){
+  $('#photosJson').value = JSON.stringify(_photos);
+}
+function updateDocsJson(){
+  $('#docsJson').value = JSON.stringify(_docs);
+}
+
+function renderPhotos(){
+  const wrap = $('#photosList');
+  wrap.innerHTML = '';
+  _photos.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    card.dataset.id = p.id;
+    card.innerHTML = `
+      <img class="photo-thumb" src="${p.dataUrl}" alt="${p.name}">
+      <div class="photo-body">
+        <input placeholder="Description…" value="${p.desc || ''}" class="photo-desc" />
+        <button type="button" class="btn xs danger remove-photo">✕</button>
+      </div>
+    `;
+    wrap.appendChild(card);
+  });
+}
+
+function renderDocs(){
+  const ul = $('#docsList');
+  ul.innerHTML = '';
+  _docs.forEach(d => {
+    const li = document.createElement('li');
+    li.className = 'doc-item';
+    li.dataset.id = d.id;
+    li.innerHTML = `
+      <span class="doc-name">📄 ${d.name}</span>
+      <button type="button" class="btn xs danger remove-doc">Delete</button>
+    `;
+    ul.appendChild(li);
+  });
+}
+
+function fileToDataUrl(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handlePhotosSelected(files){
+  const arr = Array.from(files || []);
+  for (const f of arr) {
+    if (!f.type.startsWith('image/')) { showToast('Only images allowed'); continue; }
+    const mb = f.size / (1024*1024);
+    if (mb > IMG_MAX_MB) { showToast(`Image too large (> ${IMG_MAX_MB} MB): ${f.name}`); continue; }
+    if (_photos.length >= PHOTOS_LIMIT) { showToast('Photo limit reached'); break; }
+    const dataUrl = await fileToDataUrl(f);
+    _photos.push({ id: uid(), name: f.name, dataUrl, desc: '' });
+  }
+  renderPhotos(); updatePhotosJson(); saveDraft();
+}
+
+async function handleDocsSelected(files){
+  const arr = Array.from(files || []);
+  for (const f of arr) {
+    if (f.type !== 'application/pdf') { showToast('PDF only'); continue; }
+    const mb = f.size / (1024*1024);
+    if (mb > PDF_MAX_MB) { showToast(`PDF too large (> ${PDF_MAX_MB} MB): ${f.name}`); continue; }
+    const dataUrl = await fileToDataUrl(f);
+    _docs.push({ id: uid(), name: f.name, dataUrl });
+  }
+  renderDocs(); updateDocsJson(); saveDraft();
+}
+
+function hydrateMediaFromHidden(){
+  try { _photos = JSON.parse($('#photosJson').value || '[]') || []; } catch{ _photos = []; }
+  try { _docs   = JSON.parse($('#docsJson').value   || '[]') || []; } catch{ _docs   = []; }
+  renderPhotos(); renderDocs();
+}
+
+function updatePrintAppendix(){
+  const cont = $('#printAppendix');
+  cont.innerHTML = '';
+  // Photos appendix (bigger)
+  if (_photos.length){
+    const section = document.createElement('div');
+    section.className = 'page-break';
+    section.innerHTML = `<h3>Photo Appendix</h3>`;
+    _photos.forEach(p => {
+      const fig = document.createElement('figure');
+      fig.style.margin = '12px 0';
+      fig.innerHTML = `<img src="${p.dataUrl}" style="max-width:100%;height:auto;border:1px solid #ddd;border-radius:8px"><figcaption>${(p.desc||p.name)}</figcaption>`;
+      section.appendChild(fig);
+    });
+    cont.appendChild(section);
+  }
+  // PDFs appendix (embed)
+  _docs.forEach((d, idx) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'page-break';
+    wrap.innerHTML = `<h3>Document: ${d.name}</h3><iframe src="${d.dataUrl}" style="width:100%;height:1000px;border:0"></iframe>`;
+    cont.appendChild(wrap);
+  });
+}
+
+    
     function validateMinimal(){
       const d=serializeForm($('#al-form'));
       const hasEmail=!!(d.client?.email), hasPhone=!!(d.client?.phone);
@@ -722,12 +903,55 @@ $('#metersList').addEventListener('click', (e) => {
   saveDraft();
 });
 
+// Photos input
+$('#filePhotos').addEventListener('change', async (e) => {
+  await handlePhotosSelected(e.target.files);
+  e.target.value = '';
+});
+// Photo list events (desc/edit/delete)
+$('#photosList').addEventListener('input', (e) => {
+  const card = e.target.closest('.photo-card');
+  if (!card) return;
+  if (e.target.classList.contains('photo-desc')) {
+    const id = card.dataset.id;
+    const p = _photos.find(x => x.id === id); if (!p) return;
+    p.desc = e.target.value;
+    updatePhotosJson(); saveDraft();
+  }
+});
+$('#photosList').addEventListener('click', (e) => {
+  const btn = e.target.closest('.remove-photo');
+  if (!btn) return;
+  const card = btn.closest('.photo-card');
+  const id = card.dataset.id;
+  _photos = _photos.filter(x => x.id !== id);
+  renderPhotos(); updatePhotosJson(); saveDraft();
+});
+
+// Docs input
+$('#fileDocs').addEventListener('change', async (e) => {
+  await handleDocsSelected(e.target.files);
+  e.target.value = '';
+});
+$('#docsList').addEventListener('click', (e) => {
+  const btn = e.target.closest('.remove-doc');
+  if (!btn) return;
+  const li = btn.closest('.doc-item');
+  const id = li.dataset.id;
+  _docs = _docs.filter(x => x.id !== id);
+  renderDocs(); updateDocsJson(); saveDraft();
+});
 
       
       $('#areaSelect').addEventListener('change', updateAreaVisibility);
       $('#consentChk').addEventListener('change', ()=>$('#submitBtn').disabled=!$('#consentChk').checked);
       $('#simulateUpload').addEventListener('click', ()=>showToast('Uploads coming soon — enabled in v1.1'));
-      $('#printBtn').addEventListener('click', ()=>{ buildReview(); window.print(); });
+$('#printBtn').addEventListener('click', () => {
+  buildReview();
+  updatePrintAppendix(); // add photos + PDFs as printable appendix
+  setTimeout(() => window.print(), 60);
+});
+
     $('#resetBtn').addEventListener('click', () => {
   if (!confirm('Clear the form and remove saved draft?')) return;
   $('#al-form').reset();
@@ -740,6 +964,30 @@ $('#metersList').addEventListener('click', (e) => {
   showToast('Form reset');
 });
 
+// Decision Maker -> show box when "No"
+const dmSel = $('#decisionMakerSelect');
+const dmWrap = $('#dmNameWrap');
+const dmInput = $('#dmNameInput');
+dmSel.addEventListener('change', () => {
+  const show = dmSel.value === 'false';
+  dmWrap.classList.toggle('hidden', !show);
+  dmInput.disabled = !show;
+  if (!show) dmInput.value = '';
+  saveDraft();
+});
+
+// Interests -> show "Others" box if selected
+const interestsSel = $('#interests');
+const otherWrap = $('#interestsOtherWrap');
+const otherInput = $('#interestsOtherInput');
+interestsSel.addEventListener('change', () => {
+  const values = Array.from(interestsSel.selectedOptions).map(o => o.value);
+  const show = values.includes('Others');
+  otherWrap.classList.toggle('hidden', !show);
+  otherInput.disabled = !show;
+  if (!show) otherInput.value = '';
+  saveDraft();
+});
 
 
 
@@ -754,5 +1002,8 @@ $('#metersList').addEventListener('click', (e) => {
       });
     });
   </script>
+  <!-- Printable appendix for PDFs -->
+<div id="printAppendix" class="print-only"></div>
+
 </body>
 </html>
