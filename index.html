@@ -62,7 +62,7 @@
         <h2>Staff &amp; Visit</h2>
         <div class="grid-2">
           <label class="field">
-            <span>Unit ID</span>
+            <span>Staff ID</span>
             <input name="staff.unitId" placeholder="S001" />
           </label>
           <label class="field">
@@ -211,7 +211,7 @@
         <div class="grid-2">
           <label class="field">
             <span>Estimated Budget</span>
-            <input type="number" step="0.01" name="opportunity.budget" placeholder="Amount (MYR/USD)" />
+            <input type="number" step="0.01" name="opportunity.budget" placeholder="Amount (MYR)" />
           </label>
           <label class="field">
             <span>Decision Maker Identified?</span>
@@ -328,7 +328,7 @@
             </select>
           </label>
           <label class="field">
-            <span>Owner</span>
+            <span>PIC</span>
             <input name="timeline.owner" placeholder="Defaults to submitter later" />
           </label>
         </div>
@@ -476,7 +476,7 @@ const metersHtml = (metersArr.length
       <div>
         <h3>Staff & Visit</h3>
         <ul>
-          <li><strong>Unit ID:</strong> ${d.staff?.unitId || '—'}</li>
+          <li><strong>Staff ID:</strong> ${d.staff?.unitId || '—'}</li>
           <li><strong>Staff:</strong> ${d.staff?.name || '—'}</li>
           <li><strong>Date:</strong> ${d.staff?.meetingDate || '—'}</li>
           <li><strong>Visit Type:</strong> ${d.staff?.visitType || '—'}</li>
@@ -497,7 +497,7 @@ const metersHtml = (metersArr.length
           <li><strong>Address:</strong> ${d.client?.address || '—'}</li>
         </ul>
       </div>
-      <div>
+      <div>P
         <h3>Opportunity ${priorityTag(d.opportunity?.priority || '')}</h3>
         <ul>
           <li><strong>Stage:</strong> ${d.opportunity?.stage || '—'}</li>
@@ -523,7 +523,7 @@ const metersHtml = (metersArr.length
           <li><strong>Expected:</strong> ${d.timeline?.expected || '—'}</li>
           <li><strong>Next Follow-Up:</strong> ${d.timeline?.nextFollowUp || '—'}</li>
           <li><strong>Status:</strong> ${d.timeline?.followUpStatus || '—'}</li>
-          <li><strong>Owner:</strong> ${d.timeline?.owner || '—'}</li>
+          <li><strong>PIC:</strong> ${d.timeline?.owner || '—'}</li>
           <li><strong>Task:</strong> ${d.timeline?.task1 || '—'}</li>
         </ul>
       </div>
