@@ -831,6 +831,19 @@ function updatePrintAppendix(){
   });
 }
 
+    function updateDmVisibility(){
+  const sel  = document.getElementById('decisionMakerSelect');
+  const wrap = document.getElementById('dmNameWrap');
+  const inp  = document.getElementById('dmNameInput');
+  if (!sel || !wrap || !inp) return;
+
+  const v = (sel.value || '').toLowerCase();   // supports "false" or "no"
+  const show = (v === 'false' || v === 'no');
+  wrap.classList.toggle('hidden', !show);
+  inp.disabled = !show;
+  if (!show) inp.value = '';
+}
+
     
     function validateMinimal(){
       const d=serializeForm($('#al-form'));
@@ -855,6 +868,9 @@ function updatePrintAppendix(){
       $('#year').textContent=new Date().getFullYear();
       loadDraft();
       buildMetersUIFromHidden();
+      updateDmVisibility();
+      updateAreaVisibility();
+
 
 
       $$('#steps .step').forEach(btn=>btn.addEventListener('click',()=>goStep(btn.dataset.step)));
@@ -965,16 +981,14 @@ $('#printBtn').addEventListener('click', () => {
 });
 
 // Decision Maker -> show box when "No"
-const dmSel = $('#decisionMakerSelect');
-const dmWrap = $('#dmNameWrap');
-const dmInput = $('#dmNameInput');
-dmSel.addEventListener('change', () => {
-  const show = dmSel.value === 'false';
-  dmWrap.classList.toggle('hidden', !show);
-  dmInput.disabled = !show;
-  if (!show) dmInput.value = '';
-  saveDraft();
-});
+const dmSel = document.getElementById('decisionMakerSelect');
+if (dmSel) {
+  dmSel.addEventListener('change', () => {
+    updateDmVisibility();
+    saveDraft();
+  });
+}
+
 
 // Interests -> show "Others" box if selected
 const interestsSel = $('#interests');
