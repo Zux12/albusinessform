@@ -115,7 +115,6 @@ body{
   .btn.icon{ width:100%; }
 }
 
-
 /* Media (photos/docs) */
 .media-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:8px 0 10px; }
 @media (max-width:860px){ .media-wrap{ grid-template-columns:1fr; } }
@@ -153,19 +152,27 @@ body{
   display:block;
 }
 .photo-caption{
-  padding:8px 10px; border-top:1px solid var(--line);
+  padding:10px 12px; border-top:1px solid var(--line);
   display:grid; gap:2px; background:#fff;
 }
 .photo-caption-title{
-  font-weight:700; font-size:13px; line-height:1.35;
+  font-weight:700; font-size:13px; line-height:1.35; margin-bottom:2px;
 }
 .photo-caption-meta{
   font-size:12px; color:var(--muted); line-height:1.3;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 
-
-
+/* Force 2-up layout in Review (half-page width each) */
+.review-photos{
+  display:grid;
+  grid-template-columns: 1fr 1fr;    /* two equal columns */
+  gap:12px;
+  align-items:start;
+}
+@media (max-width:860px){
+  .review-photos{ grid-template-columns: 1fr; }
+}
 
 /* Print */
 .print-only{ display:none; }
@@ -173,9 +180,17 @@ body{
   header, .steps, .al-form .actions, .al-header, .al-footer { display:none !important; }
   .print-only{ display:block; }
   .page-break{ page-break-before: always; }
+
+  /* Two columns ≈ half of A4 width each (A4: 210mm; minus margins) */
+  .review-photos{
+    grid-template-columns: 99mm 99mm;
+    gap: 6mm;
+  }
+  .review-photos .photo-card{
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 }
-
-
 
 /* Step panes */
 .step-pane{ display:none; }
@@ -210,4 +225,3 @@ body{
   display:none; opacity:0; pointer-events:none; transition: all .25s ease; box-shadow: var(--shadow); z-index:60;
 }
 .toast.show{ display:block; opacity:1; bottom:28px; }
-
