@@ -428,12 +428,14 @@
           <span>I confirm the information provided is accurate to the best of my knowledge.</span>
         </label>
 
-        <div class="actions">
-          <button type="button" class="btn ghost prev">Back</button>
-          <button type="button" class="btn" id="printBtn">Print Summary</button>
-          <button type="submit" class="btn primary" id="submitBtn" disabled>Submit</button>
-          <button type="button" class="btn danger" id="resetBtn">Reset</button>
-        </div>
+<div class="actions">
+  <button type="button" class="btn ghost prev">Back</button>
+  <button type="button" class="btn" id="printBtn">Print Summary</button>
+  <button type="button" class="btn" id="savePdfBtn">Save as PDF</button>
+  <button type="submit" class="btn primary" id="submitBtn" disabled>Submit</button>
+  <button type="button" class="btn danger" id="resetBtn">Reset</button>
+</div>
+
       </section>
     </form>
   </main>
@@ -566,9 +568,11 @@ const metersHtml = (metersArr.length
 
  <h3 style="margin-top:10px">Photos</h3>
 ${(_photos && _photos.length)
-  ? `<div class="photos-grid review-photos">` + _photos.map((p, i) =>
+  ? `<div class="review-photos">` + _photos.map((p, i) =>
       `<figure class="photo-card">
-         <img class="photo-thumb" src="${p.dataUrl}" alt="Photo ${i+1}">
+         <div class="thumb-wrap">
+           <img src="${p.dataUrl}" alt="Photo ${i+1}" width="800" height="600">
+         </div>
          <figcaption class="photo-caption">
            <div class="photo-caption-title">${(p.desc || 'No description').replace(/</g,'&lt;')}</div>
            <div class="photo-caption-meta">${(p.name || '').replace(/</g,'&lt;')}</div>
@@ -576,6 +580,7 @@ ${(_photos && _photos.length)
        </figure>`
     ).join('') + `</div>`
   : '<div class="hint">—</div>'}
+
 
 
   <h3 style="margin-top:10px">Documents (PDF)</h3>
@@ -860,6 +865,13 @@ function updatePrintAppendix(){
       window.scrollTo({top:0,behavior:'smooth'});
     }
 
+function triggerPrint(){
+  buildReview();          // ensure latest review HTML
+  updatePrintAppendix();  // add PDFs appendix (no duplicate photos)
+  setTimeout(() => window.print(), 60);
+}
+
+    
     document.addEventListener('DOMContentLoaded', ()=>{
       $('#year').textContent=new Date().getFullYear();
       loadDraft();
@@ -958,11 +970,9 @@ $('#docsList').addEventListener('click', (e) => {
       $('#areaSelect').addEventListener('change', updateAreaVisibility);
       $('#consentChk').addEventListener('change', ()=>$('#submitBtn').disabled=!$('#consentChk').checked);
 
-$('#printBtn').addEventListener('click', () => {
-  buildReview();
-  updatePrintAppendix(); // add photos + PDFs as printable appendix
-  setTimeout(() => window.print(), 60);
-});
+$('#printBtn').addEventListener('click', triggerPrint);
+$('#savePdfBtn').addEventListener('click', triggerPrint);
+
 
     $('#resetBtn').addEventListener('click', () => {
   if (!confirm('Clear the form and remove saved draft?')) return;
