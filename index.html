@@ -564,12 +564,19 @@ const metersHtml = (metersArr.length
     <li><strong>Required Docs:</strong> ${d.tech?.requiredDocs || '—'}</li>
   </ul>
 
-  <h3 style="margin-top:10px">Photos</h3>
-  ${(_photos && _photos.length)
-      ? `<div class="photos-grid">` + _photos.map(p =>
-          `<div class="photo-card"><img class="photo-thumb" src="${p.dataUrl}"><div class="photo-body"><div class="hint">${(p.desc||p.name).replace(/</g,'&lt;')}</div></div></div>`
-        ).join('') + `</div>`
-      : '<div class="hint">—</div>'}
+ <h3 style="margin-top:10px">Photos</h3>
+${(_photos && _photos.length)
+  ? `<div class="photos-grid review-photos">` + _photos.map((p, i) =>
+      `<figure class="photo-card">
+         <img class="photo-thumb" src="${p.dataUrl}" alt="Photo ${i+1}">
+         <figcaption class="photo-caption">
+           <div class="photo-caption-title">${(p.desc || 'No description').replace(/</g,'&lt;')}</div>
+           <div class="photo-caption-meta">${(p.name || '').replace(/</g,'&lt;')}</div>
+         </figcaption>
+       </figure>`
+    ).join('') + `</div>`
+  : '<div class="hint">—</div>'}
+
 
   <h3 style="margin-top:10px">Documents (PDF)</h3>
   ${(_docs && _docs.length)
@@ -810,27 +817,15 @@ function hydrateMediaFromHidden(){
 function updatePrintAppendix(){
   const cont = $('#printAppendix');
   cont.innerHTML = '';
-  // Photos appendix (bigger)
-  if (_photos.length){
-    const section = document.createElement('div');
-    section.className = 'page-break';
-    section.innerHTML = `<h3>Photo Appendix</h3>`;
-    _photos.forEach(p => {
-      const fig = document.createElement('figure');
-      fig.style.margin = '12px 0';
-      fig.innerHTML = `<img src="${p.dataUrl}" style="max-width:100%;height:auto;border:1px solid #ddd;border-radius:8px"><figcaption>${(p.desc||p.name)}</figcaption>`;
-      section.appendChild(fig);
-    });
-    cont.appendChild(section);
-  }
-  // PDFs appendix (embed)
-  _docs.forEach((d, idx) => {
+  // PDFs appendix only (no photo appendix)
+  _docs.forEach((d) => {
     const wrap = document.createElement('div');
     wrap.className = 'page-break';
     wrap.innerHTML = `<h3>Document: ${d.name}</h3><iframe src="${d.dataUrl}" style="width:100%;height:1000px;border:0"></iframe>`;
     cont.appendChild(wrap);
   });
 }
+
 
     function updateDmVisibility(){
   const sel  = document.getElementById('decisionMakerSelect');
